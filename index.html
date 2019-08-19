@@ -1,0 +1,55 @@
+<html>
+  <head>
+      <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+      <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+      <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.0.1/react-router-dom.js"></script>
+
+
+  </head>
+  <body>
+    <h1>Acme Product Averages React</h1>
+    <div id='root'></div>
+
+    <script type='text/babel'>
+
+      const root = document.querySelector('#root')
+      const { render } = ReactDOM;
+      const { Component } = React;
+      const { HashRouter, Link, Route, Switch} = ReactRouterDOM;
+
+      class App extends Component {
+        constructor(){
+          super();
+          this.state = {
+            companies: [],
+            products: [],
+            offerings: [],
+          }
+        } //end of constructor
+
+        componentDidMount(){
+          const urls = [
+            'https://acme-users-api-rev.herokuapp.com/api/companies',
+            'https://acme-users-api-rev.herokuapp.com/api/products',
+            'https://acme-users-api-rev.herokuapp.com/api/offerings'
+          ];
+          Promise.all(urls.map(url => axios.get(url)))
+            .then(responses => responses.map(response => response.data))
+            .then(([ companies, products, offerings])=> this.setState({ companies, products, offerings}))
+        } //end of component bracket
+
+        render(){
+          const { companies, products, offerings} = this.state;
+          console.log(companies)
+          console.log(products)
+          return (<hr/>);
+        } //end of render bracket
+
+      } //end of app bracket
+
+      render( <App />, root);
+    </script>
+  </body>
+</html>
