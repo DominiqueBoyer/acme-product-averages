@@ -5,7 +5,12 @@
       <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.0.1/react-router-dom.js"></script>
-
+    <style>
+     .nav{
+       display: flex;
+       justify-content: space-around;
+     }
+    </style>
 
   </head>
   <body>
@@ -18,6 +23,28 @@
       const { render } = ReactDOM;
       const { Component } = React;
       const { HashRouter, Link, Route, Switch} = ReactRouterDOM;
+
+      const Home = ({ products }) => {
+        console.log(products)
+
+        return (
+          <div>
+          <h2>Home</h2>
+          <p> We have { products.length } products with an average price of (still needs to be calculated)</p>
+          </div>
+          );
+      };
+
+      const Nav = ({products}) => {
+        return (
+          <div className='nav'>
+          <Link to='/'>Home</Link>
+          <Link to='/products'>Products</Link>
+
+          </div>
+        );
+
+      }
 
       class App extends Component {
         constructor(){
@@ -44,7 +71,17 @@
           const { companies, products, offerings} = this.state;
           console.log(companies)
           console.log(products)
-          return (<hr/>);
+          console.log(offerings)
+
+          return (
+            <HashRouter>
+              <Route render={ () => <Nav products = { products } />} />
+              <Switch>
+                <Route exact path='/' render={ () => <Home products={products} /> }/>
+              </Switch>
+            </HashRouter>
+
+          );
         } //end of render bracket
 
       } //end of app bracket
