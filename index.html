@@ -29,7 +29,7 @@
       const root = document.querySelector('#root')
       const { render } = ReactDOM;
       const { Component } = React;
-      const { HashRouter, Link, Route, Switch} = ReactRouterDOM;
+      const { HashRouter, Link, Route, Switch, Redirect} = ReactRouterDOM;
 
       const Home = ({ products }) => {
         console.log(products)
@@ -52,16 +52,25 @@
       }
 
       const Products = ( { products, companies, offerings } ) => {
+        const _products = products.map(product => {
+          let offers = offerings.filter(offer => offer.productId === product.id)
+          offers = offers.map(offer => {
+            const companyInfo = companies.find(company => company.id === offer.companyId)
+            return {...offer, companyInfo}
+          } )
+          return {...product, offers}
+        });
         return (
           <div>
             <h2>Products</h2>
             {
-              products.map(product => {
+              _products.map(product => {
+                console.log(product.offers.map(offer=> offer.price))
                 return(
                   <div className='productInfo' key={product.id}>
                     <div><strong>Product:</strong> {product.name}</div>
                     <div><strong>Suggested Price:</strong> {product.suggestedPrice}</div>
-                    <div><strong>Average Price:</strong> # </div>
+                    <div><strong>Average Price:</strong> {} </div>
                     <div><strong>Lowest Price:</strong> ## offered by ???</div>
                     <hr/>
                   </div>
@@ -106,8 +115,8 @@
               <Route render={ () => <Nav products = { products } />} />
               <Switch>
                 <Route exact path='/' render={ () => <Home products={products} /> }/>
-                <Route exact path='/products' render={ () => <Products products={products} /> }/>
-
+                <Route exact path='/products' render={ () => <Products products={products} companies={companies} offerings={offerings} /> }/>
+                <Redirect to='/' />
               </Switch>
             </HashRouter>
 
