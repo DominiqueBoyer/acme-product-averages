@@ -10,6 +10,13 @@
        display: flex;
        justify-content: space-around;
      }
+     .selected {
+       border: solid black 1px;
+       padding: 1rem;
+     }
+     .productInfo {
+       padding: 0.25rem;
+     }
     </style>
 
   </head>
@@ -40,11 +47,35 @@
           <div className='nav'>
           <Link to='/'>Home</Link>
           <Link to='/products'>Products</Link>
+          </div>
+        );
+      }
+
+      const Products = ( { products, companies, offerings } ) => {
+        return (
+          <div>
+            <h2>Products</h2>
+            {
+              products.map(product => {
+                return(
+                  <div className='productInfo' key={product.id}>
+                    <div><strong>Product:</strong> {product.name}</div>
+                    <div><strong>Suggested Price:</strong> {product.suggestedPrice}</div>
+                    <div><strong>Average Price:</strong> # </div>
+                    <div><strong>Lowest Price:</strong> ## offered by ???</div>
+                    <hr/>
+                  </div>
+
+                // <div>
+                //   <li key={product.id}> {product.name}
+                //   </li>
+                // </div>
+              )})
+            }
 
           </div>
         );
-
-      }
+      };
 
       class App extends Component {
         constructor(){
@@ -69,15 +100,14 @@
 
         render(){
           const { companies, products, offerings} = this.state;
-          console.log(companies)
-          console.log(products)
-          console.log(offerings)
 
           return (
             <HashRouter>
               <Route render={ () => <Nav products = { products } />} />
               <Switch>
                 <Route exact path='/' render={ () => <Home products={products} /> }/>
+                <Route exact path='/products' render={ () => <Products products={products} /> }/>
+
               </Switch>
             </HashRouter>
 
