@@ -67,10 +67,6 @@
                 const productAverage = product.offers.map(offer=> offer.price).reduce((sum, cur) => sum+cur)/product.offers.length
                 const lowestPrice = product.offers.map(offer => offer.price).reduce((min, cur) => min < cur ? min=min : min=cur)
                 const lowCompany = product.offers.find(offer => offer.price === lowestPrice)
-                console.log(product)
-                console.log(lowCompany)
-
-
                 return(
                   <div className='productInfo' key={product.id}>
                     <div><strong>Product:</strong> {product.name}</div>
