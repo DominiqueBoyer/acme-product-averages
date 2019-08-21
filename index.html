@@ -32,8 +32,6 @@
       const { HashRouter, Link, Route, Switch, Redirect} = ReactRouterDOM;
 
       const Home = ({ products }) => {
-        console.log(products)
-
         return (
           <div>
           <h2>Home</h2>
@@ -42,11 +40,12 @@
           );
       };
 
-      const Nav = ({products}) => {
+      const Nav = (props) => {
+        const path = props.location.pathname
         return (
           <div className='nav'>
-          <Link to='/'>Home</Link>
-          <Link to='/products'>Products</Link>
+            <Link to='/' className={ path === '/' ? 'selected' : ''}>Home</Link>
+            <Link to='/products' className={ path === '/products' ? 'selected' : ''}>Products</Link>
           </div>
         );
       }
@@ -65,13 +64,19 @@
             <h2>Products</h2>
             {
               _products.map(product => {
-                console.log(product.offers.map(offer=> offer.price))
+                const productAverage = product.offers.map(offer=> offer.price).reduce((sum, cur) => sum+cur)/product.offers.length
+                const lowestPrice = product.offers.map(offer => offer.price).reduce((min, cur) => min < cur ? min=min : min=cur)
+                const lowCompany = product.offers.find(offer => offer.price === lowestPrice)
+                console.log(product)
+                console.log(lowCompany)
+
+
                 return(
                   <div className='productInfo' key={product.id}>
                     <div><strong>Product:</strong> {product.name}</div>
                     <div><strong>Suggested Price:</strong> {product.suggestedPrice}</div>
-                    <div><strong>Average Price:</strong> {} </div>
-                    <div><strong>Lowest Price:</strong> ## offered by ???</div>
+                    <div><strong>Average Price:</strong> { productAverage.toFixed(2) } </div>
+                    <div><strong>Lowest Price:</strong> {lowestPrice.toFixed(2)} offered by {lowCompany.companyInfo.name}</div>
                     <hr/>
                   </div>
 
@@ -112,7 +117,7 @@
 
           return (
             <HashRouter>
-              <Route render={ () => <Nav products = { products } />} />
+              <Route component=  { Nav }/>
               <Switch>
                 <Route exact path='/' render={ () => <Home products={products} /> }/>
                 <Route exact path='/products' render={ () => <Products products={products} companies={companies} offerings={offerings} /> }/>
